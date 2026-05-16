@@ -2,11 +2,11 @@
 
 ## ToDo's:
 - [ ] Startseite
-- [ ] Story | Text | Bilder
-- [ ] Titel
+- [ ] Story | Text | Bilder - Marko
+- [ ] Titel - Alle
 - [ ] README
-- [ ] Frontend
-- [ ] Backend
+- [ ] Frontend - Freddy & Lennox
+- [ ] Backend - Chris & Lennox
 - [ ] Json
 
 ---
@@ -19,3 +19,6 @@
 ---
 ## Feature Ideen:
 - [ ] Light / Dark Mode
+- [ ] Sprache umstellen (Englisch)
+- [ ] Audio
+      
