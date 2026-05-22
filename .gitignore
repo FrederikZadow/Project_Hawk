@@ -1,0 +1,30 @@
+# JetBrains-IDE-spezifische Dateien und Ordner (.idea)
+
+# Ignoriere den kompletten .idea-Ordner standardmäßig
+.idea/
+
+# Nimm wichtige Konfigurationsdateien explizit wieder auf, 
+# damit sie im Team geteilt werden können:
+!.idea/runConfigurations/
+!.idea/codeStyles/
+!.idea/scopes/
+!.idea/copyright/
+!.idea/vcs.xml
+!.idea/encodings.xml
+!.idea/modules.xml
+!.idea/deployment.xml
+
+# Falls du Gradle oder Maven nutzt, kannst du diese ebenfalls teilen:
+#!.idea/compiler.xml
+#!.idea/jarRepositories.xml
+
+# Ignoriere auf jeden Fall lokale Nutzer- und Speicherdaten
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries/
+.idea/shelf/
+
+# Ignoriere generierte Daten von Build-Systemen innerhalb von .idea
+.idea/libraries/
+.idea/artifacts/
