@@ -1,0 +1,8 @@
+{
+  "scenes": {
+    "start": {
+      "image": "../public/favicon.png",
+      "options": ["Nutze den zerstörer 3 Tausend"]
+    }
+  }
+}

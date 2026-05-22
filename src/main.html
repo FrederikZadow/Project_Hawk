@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="main.css">
+    <!-- Ionicons CDN einbinden -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <link rel="icon" type="image/png" href="../public/IMG_0730.png"/>
+    <noscript>
+        <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    </noscript>
+    <title>Die Falken Geschichte</title>
+</head>
+<body>
+    <nav>
+        <button class="btn right"><ion-icon name="menu-outline"></ion-icon></button>
+    </nav>
+    <div class="center">
+        <button id="btnStartGame" class="btn">Spiel starten</button>
+    </div>
+
+    <div id="game-container" style="display: none; text-align: center; padding: 20px;">
+        <img id="story-image" src="" alt="" style="display: none; max-width: 100%;">
+        <div id="story-text"></div>
+        <div id="options-container"></div>
+    </div>
+
+    <script src="game.js"></script>
+    <footer>
+        <span>© 2026 Lennox Dobrokovsky, Christoforos Mourouzidis, Marko Wellinger und Frederik Zadow</span>
+    </footer>
+</body>
+</html>
