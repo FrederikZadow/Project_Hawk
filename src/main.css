@@ -28,6 +28,61 @@
     transform: scale(1.05) translateY(-2px);
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+#game-container {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#story-image {
+    max-width: 100vw;
+    max-height: 100vh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: none;
+}
+
+#story-text {
+    position: fixed;
+    left: 50%;
+    bottom: 8rem;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+#options-container {
+    position: fixed;
+    left: 50%;
+    bottom: 3rem;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: none;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+#options-container button {
+    cursor: pointer;
+}
+
 footer {
     position: fixed;
     bottom: 0;

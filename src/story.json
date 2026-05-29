@@ -1,8 +1,18 @@
 {
   "scenes": {
     "start": {
-      "image": "../public/favicon.png",
-      "options": ["Nutze den zerstörer 3 Tausend"]
+      "images": [
+        "../public/0_Scene1.PNG",
+        "../public/0_Scene2.PNG",
+        "../public/0_Scene3.PNG",
+        "../public/0_Scene4.PNG",
+        "../public/0_Scene5.PNG",
+        "../public/0_Scene6.PNG",
+        "../public/0_Scene7.PNG"
+      ],
+      "options": [
+
+      ]
     }
   }
 }

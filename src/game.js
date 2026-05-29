@@ -1,4 +1,6 @@
 let gameData = {};
+let currentSceneId = null;
+let currentImageIndex = 0;
 
 async function loadGameData() {
     try {
@@ -15,42 +17,84 @@ function showScene(sceneId) {
     const scene = gameData.scenes[sceneId];
     if (!scene) return;
 
-    // 1. Text aktualisieren
-    document.getElementById('story-text').innerText = scene.text;
+    currentSceneId = sceneId;
+    currentImageIndex = 0;
 
-    // 2. Bild aktualisieren
+    hideOptions();
+    showCurrentImage();
+}
+
+function showCurrentImage() {
+    const scene = gameData.scenes[currentSceneId];
+    if (!scene) return;
+
     const imgElement = document.getElementById('story-image');
-    if (scene.image) {
-        imgElement.src = scene.image;      // Setzt den Pfad aus der JSON ein (z.B. images/start.gif)
-        imgElement.style.display = "block"; // Macht das Bild sichtbar
+    const images = scene.images || [];
+
+    if(images.length > 0) {
+        imgElement.src = images[currentImageIndex];
+        imgElement.style.display = 'block';
     } else {
-        imgElement.style.display = "none";  // Versteckt das Bild, falls keins angegeben ist
+        imgElement.style.display = 'none';
     }
 
-    // 3. Alte Buttons löschen
+    const storyText = document.getElementById('story-text');
+    storyText.innerHTML = scene.text || '';
+}
+
+function nextImageOrOptions() {
+    const scene = gameData.scenes[currentSceneId];
+    if (!scene) return;
+
+    const images = scene.images || [];
+    const isLastImage = currentImageIndex >= images.length - 1;
+
+    if (!isLastImage) {
+        currentImageIndex++;
+        showCurrentImage();
+        return;
+    }
+
+    if (scene.options && scene.options.length > 0) {
+        showOptions(scene.options);
+    }
+}
+
+function showOptions(options) {
     const optionsContainer = document.getElementById('options-container');
     optionsContainer.innerHTML = '';
 
-    // 4. Neue Buttons für diese Szene erstellen
-    scene.options.forEach(option => {
+    options.forEach(option => {
         const button = document.createElement('button');
-        button.innerText = option.text;
-
-        // Klick-Event: Lade die nächste Szene
+        button.classList.add('btn')
         button.addEventListener('click', () => {
+            event.stopPropagation();
             showScene(option.nextScene);
         });
 
         optionsContainer.appendChild(button);
     });
+
+    optionsContainer.style.display = 'flex';
 }
 
-let startBtn = document.getElementById('btnStartGame');
+function hideOptions() {
+    const optionsContainer = document.getElementById('options-container');
+    optionsContainer.innerHTML = '';
+    optionsContainer.style.display = 'none';
+}
+
+const startBtn = document.getElementById('btnStartGame');
+const gameContainer = document.getElementById('game-container');
 
 startBtn.addEventListener('click', () => {
-    document.getElementById('btnStartGame').style.display = 'none';
-    document.getElementById('game-container').style.display = 'block';
+    startBtn.style.display = 'none';
+    gameContainer.style.display = 'flex';
     showScene("start");
 });
 
-loadGameData().then(r => "image");
+gameContainer.addEventListener('click', () => {
+    nextImageOrOptions();
+});
+
+loadGameData();
