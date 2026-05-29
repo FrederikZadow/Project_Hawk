@@ -11,6 +11,30 @@
         "../public/0_Scene7.PNG"
       ],
       "options": [
+        {
+          "text": "In den Wald gehen",
+          "icon": "../public/1.jpg",
+          "alt": "Wald-Icon"
+        },
+        {
+          "text": "Zum Fluss gehen",
+          "icon": "../public/2.jpg",
+          "alt": "Fluss-Icon"
+        },
+        {
+          "text": "In die Höhle gehen",
+          "icon": "../public/3.jpg",
+          "alt": "Höhlen-Icon",
+          "nextScene": "cave_1"
+        }
+      ]
+    },
+    "cave_1": {
+      "images": [
+        "../public/3_Scene1.PNG",
+        "../public/3_Scene2.PNG"
+      ],
+      "options": [
 
       ]
     }

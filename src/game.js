@@ -1,6 +1,7 @@
 let gameData = {};
 let currentSceneId = null;
 let currentImageIndex = 0;
+let optionsVisible = false;
 
 async function loadGameData() {
     try {
@@ -30,6 +31,8 @@ function showCurrentImage() {
 
     const imgElement = document.getElementById('story-image');
     const images = scene.images || [];
+
+    imgElement.classList.remove('story-image--transparent');
 
     if(images.length > 0) {
         imgElement.src = images[currentImageIndex];
@@ -62,12 +65,34 @@ function nextImageOrOptions() {
 
 function showOptions(options) {
     const optionsContainer = document.getElementById('options-container');
+    const imgElement = document.getElementById('story-image');
+
+    optionsVisible = true;
     optionsContainer.innerHTML = '';
+
+    imgElement.classList.add('story-image--transparent');
 
     options.forEach(option => {
         const button = document.createElement('button');
-        button.classList.add('btn')
-        button.addEventListener('click', () => {
+        button.classList.add('option-button');
+        button.type = 'button';
+        button.title = option.text || '';
+
+        const icon = document.createElement('img');
+        icon.classList.add('option-icon');
+        icon.src = option.icon;
+        icon.alt = option.alt || option.text || 'Option';
+
+        button.appendChild(icon);
+
+        if (option.text) {
+           const label = document.createElement('span');
+           label.classList.add('option-label');
+           label.textContent = option.text;
+           button.appendChild(label);
+        }
+
+        button.addEventListener('click', (event) => {
             event.stopPropagation();
             showScene(option.nextScene);
         });
@@ -80,8 +105,13 @@ function showOptions(options) {
 
 function hideOptions() {
     const optionsContainer = document.getElementById('options-container');
+    const imgElement = document.getElementById('story-image');
+
+    optionsVisible = false;
     optionsContainer.innerHTML = '';
     optionsContainer.style.display = 'none';
+
+    imgElement.classList.remove('story-image--transparent');
 }
 
 const startBtn = document.getElementById('btnStartGame');
