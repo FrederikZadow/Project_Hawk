@@ -1,42 +1,199 @@
 {
+  "assetPaths": {
+    "scenes": "../public/story_main/scenes/",
+    "icons": "../public/story_main/icons/"
+  },
+  "defaults": {
+    "sceneExtension": "png",
+    "iconExtension": "jpg"
+  },
+  "startScene": "start",
   "scenes": {
     "start": {
-      "images": [
-        "../public/0_Scene1.PNG",
-        "../public/0_Scene2.PNG",
-        "../public/0_Scene3.PNG",
-        "../public/0_Scene4.PNG",
-        "../public/0_Scene5.PNG",
-        "../public/0_Scene6.PNG",
-        "../public/0_Scene7.PNG"
-      ],
+      "sceneBase": "start",
+      "frameCount": 7,
       "options": [
         {
-          "text": "In den Wald gehen",
-          "icon": "../public/1.jpg",
+          "icon": "forest",
           "alt": "Wald-Icon"
         },
         {
-          "text": "Zum Fluss gehen",
-          "icon": "../public/2.jpg",
+          "icon": "river",
           "alt": "Fluss-Icon"
         },
         {
-          "text": "In die Höhle gehen",
-          "icon": "../public/3.jpg",
+          "icon": "cave",
           "alt": "Höhlen-Icon",
-          "nextScene": "cave_1"
+          "nextScene": "cave_entry"
         }
       ]
     },
-    "cave_1": {
-      "images": [
-        "../public/3_Scene1.PNG",
-        "../public/3_Scene2.PNG"
-      ],
+    "cave_entry": {
+      "sceneBase": "cave_entry",
+      "frameCount": 2,
       "options": [
-
+        {
+          "icon": "torch",
+          "alt": "Minecraft-Fackel",
+          "nextScene": "cave_fail_creeper"
+        },
+        {
+          "icon": "human_torch",
+          "alt": "Fantastic 4 Human Torch",
+          "nextScene": "cave_fail_human_torch"
+        },
+        {
+          "icon": "pokemon",
+          "alt": "Pokémon TM70 Blitz",
+          "nextScene": "cave_pokemon"
+        }
       ]
+    },
+    "cave_fail_creeper": {
+      "sceneBase": "cave_fail_creeper",
+      "frameCount": 1
+    },
+    "cave_fail_human_torch": {
+      "sceneBase": "cave_fail_human_torch",
+      "frameCount": 3
+    },
+    "cave_pokemon": {
+      "sceneBase": "cave_pokemon",
+      "frameCount": 4,
+      "options": [
+        {
+          "icon": "monster_hunter_sword",
+          "alt": "Monster Hunter Breitschwert",
+          "nextScene": "cave_fail_sword"
+        },
+        {
+          "icon": "teddy",
+          "alt": "Teddybär",
+          "nextScene": "cave_fail_teddy"
+        },
+        {
+          "icon": "headbox",
+          "alt": "Metal Gear Solid Karton",
+          "nextScene": "cave_headbox"
+        },
+        {
+          "icon": "blowgun",
+          "alt": "Betäubungsblasrohr",
+          "nextScene": "cave_fail_blowgun"
+        }
+      ]
+    },
+    "cave_fail_sword": {
+      "sceneBase": "cave_fail_sword",
+      "frameCount": 3
+    },
+    "cave_fail_teddy": {
+      "sceneBase": "cave_fail_teddy",
+      "frameCount": 2
+    },
+    "cave_fail_blowgun": {
+      "sceneBase": "cave_fail_blowgun",
+      "frameCount": 2
+    },
+    "cave_headbox": {
+      "sceneBase": "cave_headbox",
+      "frameCount": 5,
+      "options": [
+        {
+          "icon": "soap",
+          "alt": "Seife",
+          "nextScene": "cave_soap"
+        },
+        {
+          "icon": "antman",
+          "alt": "Antman-Anzug",
+          "nextScene": "cave_fail_antman"
+        }
+      ]
+    },
+    "cave_fail_antman": {
+      "sceneBase": "cave_fail_antman",
+      "frameCount": 2
+    },
+    "cave_soap": {
+      "sceneBase": "cave_soap",
+      "frameCount": 3,
+      "options": [
+        {
+          "icon": "balloon",
+          "alt": "Ballons",
+          "nextScene": "cave_fail_balloon"
+        },
+        {
+          "icon": "doodle_jump",
+          "alt": "Doodle Jump",
+          "nextScene": "cave_doodle_jump"
+        },
+        {
+          "icon": "super_glue",
+          "alt": "Sekundenkleber",
+          "nextScene": "cave_fail_super_glue"
+        },
+        {
+          "icon": "grappling_hook",
+          "alt": "Grappling Hook",
+          "nextScene": "cave_fail_grappling_hook"
+        }
+      ]
+    },
+    "cave_fail_balloon": {
+      "sceneBase": "cave_fail_balloon",
+      "frameCount": 4
+    },
+    "cave_fail_super_glue": {
+      "sceneBase": "cave_fail_super_glue",
+      "frameCount": 3
+    },
+    "cave_fail_grappling_hook": {
+      "sceneBase": "cave_fail_grappling_hook",
+      "frameCount": 2
+    },
+    "cave_doodle_jump": {
+      "sceneBase": "cave_doodle_jump",
+      "frameCount": 5,
+      "options": [
+        {
+          "icon": "sos_stones",
+          "alt": "SOS-Steine",
+          "nextScene": "cave_fail_sos"
+        },
+        {
+          "icon": "bat_signal",
+          "alt": "Batsignal-Scheinwerfer",
+          "nextScene": "cave_fail_bat_signal"
+        },
+        {
+          "icon": "carrier_pigeon",
+          "alt": "Brieftaube",
+          "nextScene": "cave_fail_carrier_pigeon"
+        },
+        {
+          "icon": "gong",
+          "alt": "Gong",
+          "nextScene": "cave_end"
+        }
+      ]
+    },
+    "cave_fail_sos": {
+      "sceneBase": "cave_fail_sos",
+      "frameCount": 2
+    },
+    "cave_fail_bat_signal": {
+      "sceneBase": "cave_fail_bat_signal",
+      "frameCount": 2
+    },
+    "cave_fail_carrier_pigeon": {
+      "sceneBase": "cave_fail_carrier_pigeon",
+      "frameCount": 3
+    },
+    "cave_end": {
+      "sceneBase": "cave_end",
+      "frameCount": 5
     }
   }
 }

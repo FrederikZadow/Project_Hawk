@@ -7,19 +7,65 @@ async function loadGameData() {
     try {
         // Holt sich die story.json Datei
         const response = await fetch('story.json');
-        gameData = await response.json();
 
+        if (!response.ok) {
+            throw new Error('Fehler beim Laden der JSON-Datei');
+        }
+
+        gameData = await response.json();
+        console.log("Story-Daten geladen:", gameData);
     } catch (error) {
         console.error("Fehler beim Laden der JSON-Datei:", error);
     }
 }
 
+function getScenePath(sceneBase, frameNumber) {
+    const scenePath = gameData.assetPaths?.scenes || '';
+    const sceneExtension = gameData.defaults?.sceneExtension || 'png';
+
+    return `${scenePath}${sceneBase}_scene${frameNumber}.${sceneExtension}`;
+}
+
+function getIconPath(iconName) {
+    const iconPath = gameData.assetPaths?.icons || '';
+    const iconExtension = gameData.defaults?.iconExtension || 'jpg';
+
+    return `${iconPath}${iconName}.${iconExtension}`;
+}
+
+function getSceneImages(scene) {
+    if (!scene) return [];
+
+    if (scene.images && scene.images.length > 0) {
+        return scene.images;
+    }
+
+    if (!scene.sceneBase || !scene.frameCount) return [];
+
+    const images = [];
+
+    for (let frameNumber = 1; frameNumber <= scene.frameCount; frameNumber++) {
+        images.push(getScenePath(scene.sceneBase, frameNumber));
+    }
+
+    return images;
+}
+
 function showScene(sceneId) {
+    if(!gameData.scenes) {
+        console.error("Story-Daten wurden noch nicht geladen.");
+        return;
+    }
+
     const scene = gameData.scenes[sceneId];
-    if (!scene) return;
+    if (!scene) {
+        console.error(`Szene "${sceneId}" wurde nicht gefunden.`)
+        return;
+    }
 
     currentSceneId = sceneId;
     currentImageIndex = 0;
+    optionsVisible = false;
 
     hideOptions();
     showCurrentImage();
@@ -30,26 +76,30 @@ function showCurrentImage() {
     if (!scene) return;
 
     const imgElement = document.getElementById('story-image');
-    const images = scene.images || [];
+    const storyText = document.getElementById('story-text');
+    const images = getSceneImages(scene);
 
     imgElement.classList.remove('story-image--transparent');
 
     if(images.length > 0) {
         imgElement.src = images[currentImageIndex];
+        imgElement.alt = scene.alt || '';
         imgElement.style.display = 'block';
     } else {
+        imgElement.removeAttribute('src');
         imgElement.style.display = 'none';
     }
 
-    const storyText = document.getElementById('story-text');
     storyText.innerHTML = scene.text || '';
 }
 
 function nextImageOrOptions() {
+    if (optionsVisible) return;
+
     const scene = gameData.scenes[currentSceneId];
     if (!scene) return;
 
-    const images = scene.images || [];
+    const images = getSceneImages(scene);
     const isLastImage = currentImageIndex >= images.length - 1;
 
     if (!isLastImage) {
@@ -80,7 +130,7 @@ function showOptions(options) {
 
         const icon = document.createElement('img');
         icon.classList.add('option-icon');
-        icon.src = option.icon;
+        icon.src = getIconPath(option.icon);
         icon.alt = option.alt || option.text || 'Option';
 
         button.appendChild(icon);
@@ -94,6 +144,12 @@ function showOptions(options) {
 
         button.addEventListener('click', (event) => {
             event.stopPropagation();
+
+            if(!option.nextScene) {
+                console.warn('Diese Option hat keine nextScene:', option);
+                return;
+            }
+
             showScene(option.nextScene);
         });
 
