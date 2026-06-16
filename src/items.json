@@ -1,0 +1,17 @@
+{
+  "coin": {
+    "name": "Goldmünze",
+    "icon": "coin",
+    "alt": "Goldene Münze"
+  },
+  "knife": {
+    "name": "Messer",
+    "icon": "knife",
+    "alt": "Messer"
+  },
+  "banana": {
+    "name": "Banane",
+    "icon": "banana",
+    "alt": "Banane"
+  }
+}
