@@ -1,13 +1,4 @@
 {
-  "assetPaths": {
-    "scenes": "../public/story_main/scenes/",
-    "icons": "../public/story_main/icons/"
-  },
-  "defaults": {
-    "sceneExtension": "png",
-    "iconExtension": "jpg"
-  },
-  "startScene": "start",
   "scenes": {
     "start": {
       "sceneBase": "start",
@@ -15,7 +6,8 @@
       "options": [
         {
           "icon": "forest",
-          "alt": "Wald-Icon"
+          "alt": "Wald-Icon",
+          "nextScene": "monkey_entry"
         },
         {
           "icon": "river",
@@ -27,6 +19,277 @@
           "nextScene": "cave_entry"
         }
       ]
+    },
+    "monkey_entry": {
+      "sceneBase": "monkey_entry",
+      "frameCount": 3,
+      "options": [
+        {
+          "icon": "costume",
+          "alt": "Affen-Kostüm",
+          "nextScene": "monkey_costume"
+        },
+        {
+          "icon": "ring",
+          "alt": "Ring der Unsichtbarkeit",
+          "nextScene": "monkey_fail_ring"
+        },
+        {
+          "icon": "banana",
+          "alt": "Banane",
+          "nextScene": "monkey_fail_banana"
+        }
+      ]
+    },
+    "monkey_fail_ring": {
+      "sceneBase": "monkey_fail_ring",
+      "frameCount": 2,
+      "returnToScene": "monkey_entry"
+    },
+    "monkey_fail_banana": {
+      "sceneBase": "monkey_fail_banana",
+      "frameCount": 2,
+      "returnToScene": "monkey_entry"
+    },
+    "monkey_costume": {
+      "sceneBase": "monkey_costume",
+      "frameCount": 3,
+      "options": [
+        {
+          "icon": "chessboard",
+          "alt": "Schachtisch",
+          "nextScene": "monkey_chessboard"
+        },
+        {
+          "icon": "temple",
+          "alt": "Tempel",
+          "nextScene": "monkey_temple"
+        },
+        {
+          "id": "training_ground",
+          "icon": "training_ground",
+          "alt": "Gym",
+          "nextScene": "monkey_training_ground"
+        },
+        {
+          "id": "storage_room",
+          "icon": "storage_room",
+          "alt": "Lager",
+          "nextScene": "monkey_storage_room"
+        },
+        {
+          "icon": "market",
+          "alt": "Markt",
+          "nextScene": "monkey_market"
+        }
+      ]
+    },
+    "monkey_chessboard": {
+      "sceneBase": "monkey_chessboard",
+      "frameCount": 2,
+      "options": [
+        {
+          "icon": "queen",
+          "alt": "Dame",
+          "nextScene": "monkey_chess_piece"
+        },
+        {
+          "icon": "knight",
+          "alt": "Springer",
+          "nextScene": "monkey_chess_piece"
+        },
+        {
+          "icon": "bishop",
+          "alt": "Läufer",
+          "nextScene": "monkey_chess_piece"
+        }
+      ]
+    },
+    "monkey_chess_piece": {
+      "sceneBase": "monkey_chess_piece",
+      "frameCount": 4,
+      "nextScene": "monkey_end_prison"
+    },
+    "monkey_end_prison": {
+      "sceneBase": "monkey_end_prison",
+      "frameCount": 2
+    },
+    "monkey_temple": {
+      "sceneBase": "monkey_temple",
+      "frameCount": 1,
+      "hasItem": "banana",
+      "missingItemScene": "monkey_fail_temple",
+      "removeItem": "banana",
+      "nextScene": "monkey_temple_entry"
+    },
+    "monkey_fail_temple": {
+      "sceneBase": "monkey_fail_temple",
+      "frameCount": 2,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_temple_entry": {
+      "sceneBase": "monkey_temple_entry",
+      "frameCount": 6,
+      "hasItem": "knife",
+      "missingItemScene": "monkey_fail_murder",
+      "removeItem": "knife",
+      "nextScene": "monkey_murder"
+    },
+    "monkey_fail_murder": {
+      "sceneBase": "monkey_fail_murder",
+      "frameCount": 3,
+      "obtainItem": "banana",
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_murder": {
+      "sceneBase": "monkey_murder",
+      "frameCount": 4,
+      "nextScene": "monkey_end_king"
+    },
+    "monkey_end_king": {
+      "sceneBase": "monkey_end_king",
+      "frameCount": 2
+    },
+    "monkey_training_ground": {
+      "sceneBase": "monkey_training_ground",
+      "frameCount": 4,
+      "options": [
+        {
+          "icon": "distraction",
+          "alt": "Ablenkungsmanöver",
+          "nextScene": "monkey_distraction",
+          "lockOption": {
+            "scene": "monkey_costume",
+            "option": "training_ground"
+          },
+          "unlockOption": {
+            "scene": "monkey_market",
+            "option": "purchase_banana"
+          }
+        },
+        {
+          "icon": "spinach",
+          "alt": "Popeye Spinat",
+          "nextScene": "monkey_fail_spinach"
+        },
+        {
+          "icon": "magnet",
+          "alt": "Magnet",
+          "nextScene": "monkey_fail_magnet"
+        }
+      ]
+    },
+    "monkey_fail_spinach": {
+      "sceneBase": "monkey_fail_spinach",
+      "frameCount": 3,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_fail_magnet": {
+      "sceneBase": "monkey_fail_magnet",
+      "frameCount": 2,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_distraction": {
+      "sceneBase": "monkey_distraction",
+      "frameCount": 4,
+      "obtainItem": "coin",
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_storage_room": {
+      "sceneBase": "monkey_storage_room",
+      "frameCount": 4,
+      "options": [
+        {
+          "icon": "grenade",
+          "alt": "Granate",
+          "nextScene": "monkey_fail_grenade"
+        },
+        {
+          "icon": "nunchaku",
+          "alt": "Nunchaku",
+          "nextScene": "monkey_fail_nunchaku"
+        },
+        {
+          "icon": "portal_gun",
+          "alt": "Portal-Gun",
+          "nextScene": "monkey_fail_portal_gun"
+        },
+        {
+          "icon": "knife",
+          "alt": "Messer",
+          "nextScene": "monkey_knife",
+          "lockOption": {
+            "scene": "monkey_costume",
+            "option": "storage_room"
+          },
+          "unlockOption": {
+            "scene": "monkey_market",
+            "option": "robbery_attempt"
+          }
+        }
+      ]
+    },
+    "monkey_fail_grenade": {
+      "sceneBase": "monkey_fail_grenade",
+      "frameCount": 3,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_fail_nunchaku": {
+      "sceneBase": "monkey_fail_nunchaku",
+      "frameCount": 3,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_fail_portal_gun": {
+      "sceneBase": "monkey_fail_portal_gun",
+      "frameCount": 3,
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_knife": {
+      "sceneBase": "monkey_knife",
+      "frameCount": 2,
+      "obtainItem": "knife",
+      "returnToScene": "monkey_costume"
+    },
+    "monkey_market": {
+      "sceneBase": "monkey_market",
+      "frameCount": 1,
+      "options": [
+        {
+          "icon": "empty_pockets",
+          "alt": "Leere Hosentasche",
+          "returnToScene": "monkey_costume"
+        },
+        {
+          "id": "robbery_attempt",
+          "icon": "knife",
+          "alt": "Messer",
+          "locked": true,
+          "nextScene": "monkey_robbery"
+        },
+        {
+          "id": "purchase_banana",
+          "icon": "coin",
+          "alt": "Münze",
+          "locked": true,
+          "removeItem": "coin",
+          "nextScene": "monkey_coin",
+          "lockOption": {
+            "scene": "monkey_market",
+            "option": "purchase_banana"
+          }
+        }
+      ]
+    },
+    "monkey_robbery": {
+      "sceneBase": "monkey_robbery",
+      "frameCount": 2,
+      "nextScene": "monkey_end_prison"
+    },
+    "monkey_coin": {
+      "sceneBase": "monkey_coin",
+      "frameCount": 2,
+      "obtainItem": "banana",
+      "returnToScene": "monkey_costume"
     },
     "cave_entry": {
       "sceneBase": "cave_entry",

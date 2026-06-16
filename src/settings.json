@@ -1,0 +1,11 @@
+{
+  "assetPaths": {
+    "scenes": "../public/story_main/scenes/",
+    "icons": "../public/story_main/icons/"
+  },
+  "defaults": {
+    "sceneExtension": "png",
+    "iconExtension": "jpg"
+  },
+  "startScene": "start"
+}
