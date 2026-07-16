@@ -11,7 +11,8 @@
         },
         {
           "icon": "river",
-          "alt": "Fluss-Icon"
+          "alt": "Fluss-Icon",
+          "nextScene": "river_entry"
         },
         {
           "icon": "cave",
@@ -118,12 +119,12 @@
       "sceneBase": "monkey_temple",
       "frameCount": 1,
       "hasItem": "banana",
-      "missingItemScene": "monkey_fail_temple",
+      "missingItemScene": "monkey_reject_temple",
       "removeItem": "banana",
       "nextScene": "monkey_temple_entry"
     },
-    "monkey_fail_temple": {
-      "sceneBase": "monkey_fail_temple",
+    "monkey_reject_temple": {
+      "sceneBase": "monkey_reject_temple",
       "frameCount": 2,
       "returnToScene": "monkey_costume"
     },
@@ -131,15 +132,13 @@
       "sceneBase": "monkey_temple_entry",
       "frameCount": 6,
       "hasItem": "knife",
-      "missingItemScene": "monkey_fail_murder",
+      "missingItemScene": "monkey_end_failed_murder",
       "removeItem": "knife",
       "nextScene": "monkey_murder"
     },
-    "monkey_fail_murder": {
-      "sceneBase": "monkey_fail_murder",
-      "frameCount": 3,
-      "obtainItem": "banana",
-      "returnToScene": "monkey_costume"
+    "monkey_end_failed_murder": {
+      "sceneBase": "monkey_end_failed_murder",
+      "frameCount": 4
     },
     "monkey_murder": {
       "sceneBase": "monkey_murder",
@@ -291,6 +290,11 @@
       "obtainItem": "banana",
       "returnToScene": "monkey_costume"
     },
+    "river_entry": {
+      "sceneBase": "work_in_progress",
+      "frameCount": 1,
+      "returnToScene": "start"
+    },
     "cave_entry": {
       "sceneBase": "cave_entry",
       "frameCount": 2,
@@ -314,11 +318,13 @@
     },
     "cave_fail_creeper": {
       "sceneBase": "cave_fail_creeper",
-      "frameCount": 1
+      "frameCount": 1,
+      "returnToScene": "cave_entry"
     },
     "cave_fail_human_torch": {
       "sceneBase": "cave_fail_human_torch",
-      "frameCount": 3
+      "frameCount": 3,
+      "returnToScene": "cave_entry"
     },
     "cave_pokemon": {
       "sceneBase": "cave_pokemon",
@@ -348,15 +354,18 @@
     },
     "cave_fail_sword": {
       "sceneBase": "cave_fail_sword",
-      "frameCount": 3
+      "frameCount": 3,
+      "returnToScene": "cave_pokemon"
     },
     "cave_fail_teddy": {
       "sceneBase": "cave_fail_teddy",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_pokemon"
     },
     "cave_fail_blowgun": {
       "sceneBase": "cave_fail_blowgun",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_pokemon"
     },
     "cave_headbox": {
       "sceneBase": "cave_headbox",
@@ -376,7 +385,8 @@
     },
     "cave_fail_antman": {
       "sceneBase": "cave_fail_antman",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_headbox"
     },
     "cave_soap": {
       "sceneBase": "cave_soap",
@@ -406,15 +416,18 @@
     },
     "cave_fail_balloon": {
       "sceneBase": "cave_fail_balloon",
-      "frameCount": 4
+      "frameCount": 4,
+      "returnToScene": "cave_soap"
     },
     "cave_fail_super_glue": {
       "sceneBase": "cave_fail_super_glue",
-      "frameCount": 3
+      "frameCount": 3,
+      "returnToScene": "cave_soap"
     },
     "cave_fail_grappling_hook": {
       "sceneBase": "cave_fail_grappling_hook",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_soap"
     },
     "cave_doodle_jump": {
       "sceneBase": "cave_doodle_jump",
@@ -438,24 +451,27 @@
         {
           "icon": "gong",
           "alt": "Gong",
-          "nextScene": "cave_end"
+          "nextScene": "cave_end_reunion"
         }
       ]
     },
     "cave_fail_sos": {
       "sceneBase": "cave_fail_sos",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_doodle_jump"
     },
     "cave_fail_bat_signal": {
       "sceneBase": "cave_fail_bat_signal",
-      "frameCount": 2
+      "frameCount": 2,
+      "returnToScene": "cave_doodle_jump"
     },
     "cave_fail_carrier_pigeon": {
       "sceneBase": "cave_fail_carrier_pigeon",
-      "frameCount": 3
+      "frameCount": 3,
+      "returnToScene": "cave_doodle_jump"
     },
-    "cave_end": {
-      "sceneBase": "cave_end",
+    "cave_end_reunion": {
+      "sceneBase": "cave_end_reunion",
       "frameCount": 5
     }
   }

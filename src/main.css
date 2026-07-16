@@ -11,21 +11,43 @@
     display: block;
 }
 
+#start-screen {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    inset: 0;
+    background-color: black;
+    background-image: url("../public/start/title_screen.png");
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: block;
+    z-index: 10;
+
+    --start-button-x: 50%;
+    --start-button-y: 70%;
+}
+
 .btn {
-    border: 5rem;
-    border-radius: 2rem;
-    background-color: gray;
-    color: white;
-    font-size: 16px;
+    position: absolute;
+    left: var(--start-button-x);
+    top: var(--start-button-y);
+    transform: translate(-50%, -50%);
+    border: 0.5rem solid black;
+    border-radius: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.67);
+    color: black;
+    font-size: 35px;
+    font-weight: bold;
     cursor: pointer;
-    padding: 1rem 2rem;
+    padding: 1.5rem 4rem;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .btn:hover {
     /*background-color: red;*/
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    transform: scale(1.05) translateY(-2px);
+    transform: translate(-50%, -50%) scale(1.05);
 }
 
 html, body {
@@ -55,6 +77,21 @@ html, body {
     object-fit: contain;
     display: none;
     transition: opacity 0.3s ease;
+}
+
+#fail-overlay {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    max-width: 80%;
+    max-height: 80%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: none;
+    pointer-events: none;
 }
 
 .story-image--transparent {

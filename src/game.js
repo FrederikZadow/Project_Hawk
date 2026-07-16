@@ -2,6 +2,7 @@ let gameData = {};
 let currentSceneId = null;
 let currentImageIndex = 0;
 let optionsVisible = false;
+let failOverlayVisible = false;
 let inventory = new Set();
 let lockedOptions = new Set();
 
@@ -41,14 +42,13 @@ function initializeLockedOptions() {
     lockedOptions.clear();
 
     Object.entries(gameData.scenes || {}).forEach(([sceneId, scene]) => {
-        if (!scene.options ||scene.options.length === 0) return;
+        if (!scene.options || scene.options.length === 0) return;
 
         scene.options.forEach(option => {
             if (option.locked !== true) return;
             if (!option.id) return;
 
             lockedOptions.add(getOptionLockKey(sceneId, option.id));
-            delete option.locked;
         });
     })
 }
@@ -145,6 +145,61 @@ function getIconPath(iconName) {
     return `${iconPath}${iconName}.${iconExtension}`;
 }
 
+function isFailScene(sceneId) {
+    return sceneId.includes('_fail_') || sceneId.includes('fail_');
+}
+
+function isEndScene(sceneId) {
+    return sceneId.includes('_end_') || sceneId.includes('end_');
+}
+
+function resetGameState() {
+    currentSceneId = null;
+    currentImageIndex = 0;
+    optionsVisible = false;
+    failOverlayVisible = false;
+
+    inventory.clear();
+    initializeLockedOptions();
+}
+
+function showStartScreen() {
+    const startScreen = document.getElementById('start-screen');
+    const gameContainer = document.getElementById('game-container');
+    const imgElement = document.getElementById('story-image');
+    const storyText = document.getElementById('story-text');
+
+    resetGameState();
+
+    hideOptions();
+    hideFailOverlay();
+
+    imgElement.removeAttribute('src');
+    imgElement.style.display = 'none';
+    storyText.innerHTML = '';
+
+    gameContainer.style.display = 'none';
+    startScreen.style.display = 'flex';
+}
+
+function showFailOverlay() {
+    const failOverlay = document.getElementById('fail-overlay');
+    const imgElement = document.getElementById('story-image');
+
+    failOverlayVisible = true;
+    failOverlay.style.display = 'block';
+    imgElement.classList.add('story-image--transparent');
+}
+
+function hideFailOverlay() {
+    const failOverlay = document.getElementById('fail-overlay');
+    const imgElement = document.getElementById('story-image');
+
+    failOverlayVisible = false;
+    failOverlay.style.display = 'none';
+    imgElement.classList.remove('story-image--transparent');
+}
+
 function getSceneImages(scene) {
     if (!scene) return [];
 
@@ -177,11 +232,19 @@ function showScene(sceneId, settings = {}) {
 
     const images = getSceneImages(scene);
 
+    console.log("Show scene:", {
+        sceneId,
+        scene,
+        images,
+        settings
+    });
+
     currentSceneId = sceneId;
-    currentImageIndex = settings.startAtLastImage ? Math.max(images.length - 1, 0) : 0;
+    currentImageIndex = settings.startAtLastImage && images.length > 0 ? images.length - 1 : 0;
     optionsVisible = false;
 
     hideOptions();
+    hideFailOverlay();
     showCurrentImage();
 
     if(settings.showOptionsImmediately && scene.options && scene.options.length > 0) {
@@ -196,11 +259,12 @@ function showCurrentImage() {
     const imgElement = document.getElementById('story-image');
     const storyText = document.getElementById('story-text');
     const images = getSceneImages(scene);
+    const currentImage = images[currentImageIndex];
 
     imgElement.classList.remove('story-image--transparent');
 
-    if(images.length > 0) {
-        imgElement.src = images[currentImageIndex];
+    if(currentImage) {
+        imgElement.src = currentImage;
         imgElement.alt = scene.alt || '';
         imgElement.style.display = 'block';
     } else {
@@ -217,12 +281,32 @@ function nextImageOrOptions() {
     const scene = gameData.scenes[currentSceneId];
     if (!scene) return;
 
+    if (failOverlayVisible) {
+       if (scene.returnToScene) {
+           showScene(scene.returnToScene, {
+              startAtLastImage: true,
+           });
+       }
+
+       return;
+    }
+
     const images = getSceneImages(scene);
     const isLastImage = currentImageIndex >= images.length - 1;
 
     if (!isLastImage) {
         currentImageIndex++;
         showCurrentImage();
+        return;
+    }
+
+    if(isFailScene(currentSceneId) && scene.returnToScene) {
+        showFailOverlay();
+        return;
+    }
+
+    if (isEndScene(currentSceneId)) {
+        showStartScreen();
         return;
     }
 
@@ -332,10 +416,13 @@ function hideOptions() {
 }
 
 const startBtn = document.getElementById('btnStartGame');
+const startScreen = document.getElementById('start-screen');
 const gameContainer = document.getElementById('game-container');
 
 startBtn.addEventListener('click', () => {
-    startBtn.style.display = 'none';
+    resetGameState();
+
+    startScreen.style.display = 'none';
     gameContainer.style.display = 'flex';
     showScene(gameData.startScene || "start");
 });
