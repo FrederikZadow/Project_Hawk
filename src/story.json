@@ -291,9 +291,246 @@
       "returnToScene": "monkey_costume"
     },
     "river_entry": {
-      "sceneBase": "work_in_progress",
-      "frameCount": 1,
-      "returnToScene": "start"
+      "sceneBase": "river_entry",
+      "frameCount": 4,
+      "options": [
+        {
+          "icon": "ignore",
+          "alt": "Ignorieren",
+          "nextScene": "river_monkey_ignore"
+        },
+        {
+          "icon": "ice_ray",
+          "alt": "Eiswerfer",
+          "nextScene": "river_fail_ice_ray"
+        },
+        {
+          "icon": "raft",
+          "alt": "Floß",
+          "nextScene": "river_raft"
+        },
+        {
+          "icon": "frog_suit",
+          "alt": "Frosch-Anzug",
+          "nextScene": "river_fail_frog_suit"
+        }
+      ]
+    },
+    "river_monkey_ignore": {
+      "sceneBase": "river_monkey_ignore",
+      "frameCount": 3,
+      "returnToScene": "monkey_entry"
+    },
+    "river_fail_ice_ray": {
+      "sceneBase": "river_fail_ice_ray",
+      "frameCount": 4,
+      "returnToScene": "river_entry"
+    },
+    "river_fail_frog_suit": {
+      "sceneBase": "river_fail_frog_suit",
+      "frameCount": 5,
+      "returnToScene": "river_entry"
+    },
+    "river_raft": {
+      "sceneBase": "river_raft",
+      "frameCount": 4,
+      "optionGroups": [
+        {
+          "title": "Flick",
+          "options": [
+            {
+              "id": "rope",
+              "icon": "rope",
+              "alt": "Seil und Haken"
+            },
+            {
+              "id": "paddle",
+              "icon": "paddle",
+              "alt": "Paddel"
+            }
+          ]
+        },
+        {
+          "title": "Alek",
+          "options": [
+            {
+              "id": "hand",
+              "icon": "hand",
+              "alt": "Hand"
+            },
+            {
+              "id": "connection_error",
+              "icon": "connection_error",
+              "alt": "Lag"
+            }
+          ]
+        }
+      ],
+      "optionCombinations": [
+        {
+          "options": ["rope", "hand"],
+          "nextScene": "river_rope_hand"
+        },
+        {
+          "options": ["rope", "connection_error"],
+          "nextScene": "river_fail_rope_connection_error"
+        },
+        {
+          "options": ["paddle", "hand"],
+          "nextScene": "river_fail_paddle_hand"
+        },
+        {
+          "options": ["paddle", "connection_error"],
+          "nextScene": "river_fail_paddle_connection_error"
+        }
+      ]
+    },
+    "river_fail_rope_connection_error": {
+      "sceneBase": "river_fail_rope_connection_error",
+      "frameCount": 2,
+      "returnToScene": "river_raft"
+    },
+    "river_fail_paddle_hand": {
+      "sceneBase": "river_fail_paddle_hand",
+      "frameCount": 4,
+      "returnToScene": "river_raft"
+    },
+    "river_fail_paddle_connection_error": {
+      "sceneBase": "river_fail_paddle_connection_error",
+      "frameCount": 4,
+      "returnToScene": "river_raft"
+    },
+    "river_rope_hand": {
+      "sceneBase": "river_rope_hand",
+      "frameCount": 11,
+      "optionGroups": [
+        {
+          "title": "Flick",
+          "options": [
+            {
+              "id": "flamethrower",
+              "icon": "flamethrower",
+              "alt": "Flammenwerfer"
+            },
+            {
+              "id": "cannon",
+              "icon": "cannon",
+              "alt": "Kanone"
+            },
+            {
+              "id": "harpoon",
+              "icon": "harpoon",
+              "alt": "Harpune"
+            }
+          ]
+        },
+        {
+          "title": "Alek",
+          "options": [
+            {
+              "id": "puppets",
+              "icon": "puppets",
+              "alt": "Puppen"
+            },
+            {
+              "id": "motor",
+              "icon": "motor",
+              "alt": "Motor"
+            }
+          ]
+        }
+      ],
+      "optionCombinations": [
+        {
+          "options": ["harpoon", "puppets"],
+          "nextScene": "river_fail_harpoon_puppets"
+        },
+        {
+          "options": ["flamethrower", "puppets"],
+          "nextScene": "river_fail_flamethrower_puppets"
+        },
+        {
+          "options": ["flamethrower", "motor"],
+          "nextScene": "river_fail_flamethrower_motor"
+        },
+        {
+          "options": ["cannon", "puppets"],
+          "nextScene": "river_fail_cannon_puppets"
+        },
+        {
+          "options": ["cannon", "motor"],
+          "nextScene": "river_cannon_motor"
+        },
+        {
+          "options": ["harpoon", "motor"],
+          "nextScene": "river_fail_harpoon_motor"
+        }
+      ]
+    },
+    "river_fail_harpoon_puppets": {
+      "sceneBase": "river_fail_harpoon_puppets",
+      "frameCount": 4,
+      "returnToScene": "river_rope_hand"
+    },
+    "river_fail_flamethrower_puppets": {
+      "sceneBase": "river_fail_flamethrower_puppets",
+      "frameCount": 5,
+      "returnToScene": "river_rope_hand"
+    },
+    "river_fail_flamethrower_motor": {
+      "sceneBase": "river_fail_flamethrower_motor",
+      "frameCount": 5,
+      "returnToScene": "river_rope_hand"
+    },
+    "river_fail_cannon_puppets": {
+      "sceneBase": "river_fail_cannon_puppets",
+      "frameCount": 6,
+      "returnToScene": "river_rope_hand"
+    },
+    "river_fail_harpoon_motor": {
+      "sceneBase": "river_fail_harpoon_motor",
+      "frameCount": 4,
+      "returnToScene": "river_rope_hand"
+    },
+    "river_cannon_motor": {
+      "sceneBase": "river_cannon_motor",
+      "frameCount": 9,
+      "options": [
+        {
+          "icon": "transformer",
+          "alt": "Transformer",
+          "nextScene": "river_transformer"
+        },
+        {
+          "icon": "shockwave_grenade",
+          "alt": "Schockwellengranate",
+          "nextScene": "river_fail_shockwave_grenade"
+        },
+        {
+          "icon": "web_shooters",
+          "alt": "Spinnennetzkanone",
+          "nextScene": "river_fail_web_shooters"
+        }
+      ]
+    },
+    "river_fail_shockwave_grenade": {
+      "sceneBase": "river_fail_shockwave_grenade",
+      "frameCount": 2,
+      "returnToScene": "river_cannon_motor"
+    },
+    "river_fail_web_shooters": {
+      "sceneBase": "river_fail_web_shooters",
+      "frameCount": 3,
+      "returnToScene": "river_cannon_motor"
+    },
+    "river_transformer": {
+      "sceneBase": "river_transformer",
+      "frameCount": 6,
+      "nextScene": "river_end_toBeContinued"
+    },
+    "river_end_toBeContinued": {
+      "sceneBase": "river_end_toBeContinued",
+      "frameCount": 4
     },
     "cave_entry": {
       "sceneBase": "cave_entry",

@@ -123,6 +123,49 @@ html, body {
     flex-wrap: wrap;
 }
 
+#options-container.options-container--dual {
+    width: min(90vw, 60rem);
+    max-height: 85vh;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 1.5rem;
+}
+
+.option-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.option-group-title {
+    margin: 0;
+    color: white;
+    font-size: 1.4rem;
+    text-align: center;
+    text-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.8);
+}
+
+.option-group-choices {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.option-group-divider {
+    width: 100%;
+    height: 0.15rem;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.85),
+        transparent
+    );
+}
+
 .option-button {
     border: none;
     background: rgba(0, 0, 0, 0.45);
@@ -144,6 +187,35 @@ html, body {
     transform: scale(1.08);
     background: rgba(0, 0, 0, 0.7);
     box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.4);
+}
+
+.option-button--selected {
+    background: rgba(255, 255, 255, 0.25);
+    outline: 0.25rem solid white;
+    box-shadow: 0 0 1.5rem rgba(255, 255, 255, 0.85);
+    transform: scale(1.08);
+}
+
+.option-confirm-button {
+    border: 0.2rem solid white;
+    border-radius: 1.5rem;
+    background: rgba(255, 255, 255, 0.9);
+    color: black;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 1rem 3rem;
+    transition: transform 0.25s ease, opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.option-confirm-button:not(:disabled):hover {
+    transform: scale(1.05);
+    background: white;
+}
+
+.option-confirm-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
 }
 
 .option-icon {

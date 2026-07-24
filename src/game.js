@@ -247,8 +247,12 @@ function showScene(sceneId, settings = {}) {
     hideFailOverlay();
     showCurrentImage();
 
-    if(settings.showOptionsImmediately && scene.options && scene.options.length > 0) {
+    if (settings.showOptionsImmediately && scene.options && scene.options.length > 0) {
         showOptions(scene.options, sceneId);
+    }
+
+    if (settings.showOptionsImmediately && scene.optionGroups && scene.optionGroups.length > 0) {
+        showOptionGroups(scene.optionGroups, sceneId);
     }
 }
 
@@ -333,6 +337,10 @@ function nextImageOrOptions() {
         return;
     }
 
+    if (scene.optionGroups && scene.optionGroups.length > 0) {
+        showOptionGroups(scene.optionGroups, currentSceneId);
+    }
+
     if (scene.returnToScene) {
         showScene(scene.returnToScene, {
            startAtLastImage: true,
@@ -344,6 +352,45 @@ function nextImageOrOptions() {
     if (scene.nextScene) {
         showScene(scene.nextScene);
     }
+}
+
+function handleOptionSelection(option) {
+    applyOptionEffects(option);
+
+    if(option.returnToScene) {
+        showScene(option.returnToScene, {
+           startAtLastImage: true,
+           showOptionsImmediately: true
+        });
+        return;
+    }
+
+    if (!option.nextScene) return;
+
+    showScene(option.nextScene);
+}
+
+function createOptionButton(option) {
+    const button = document.createElement('button');
+    button.classList.add('option-button');
+    button.type = 'button';
+    button.title = option.text || '';
+
+    const icon = document.createElement('img');
+    icon.classList.add('option-icon');
+    icon.src = getIconPath(option.icon);
+    icon.alt = option.alt || option.text || 'Option';
+
+    button.appendChild(icon);
+
+    if (option.text) {
+       const label = document.createElement('span');
+       label.classList.add('option-label');
+       label.textContent = option.text;
+       button.appendChild(label);
+    }
+
+    return button;
 }
 
 function showOptions(options, sceneId = currentSceneId) {
@@ -358,50 +405,119 @@ function showOptions(options, sceneId = currentSceneId) {
     options.forEach(option => {
         if (isOptionLocked(sceneId, option)) return;
 
-        const button = document.createElement('button');
-        button.classList.add('option-button');
-        button.type = 'button';
-        button.title = option.text || '';
-
-        const icon = document.createElement('img');
-        icon.classList.add('option-icon');
-        icon.src = getIconPath(option.icon);
-        icon.alt = option.alt || option.text || 'Option';
-
-        button.appendChild(icon);
-
-        if (option.text) {
-           const label = document.createElement('span');
-           label.classList.add('option-label');
-           label.textContent = option.text;
-           button.appendChild(label);
-        }
+        const button = createOptionButton(option);
 
         button.addEventListener('click', (event) => {
             event.stopPropagation();
-
-            applyOptionEffects(option);
-
-            if (option.returnToScene) {
-                showScene(option.returnToScene, {
-                   startAtLastImage: true,
-                   showOptionsImmediately: true
-                });
-                return;
-            }
-
-            if(!option.nextScene) {
-                console.warn('Diese Option hat keine nextScene:', option);
-                return;
-            }
-
-            showScene(option.nextScene);
+            handleOptionSelection(option);
         });
 
         optionsContainer.appendChild(button);
     });
 
+    optionsContainer.classList.remove('options-container--dual');
     optionsContainer.style.display = 'flex';
+}
+
+function showOptionGroups(optionGroups, sceneId = currentSceneId) {
+    const optionsContainer = document.getElementById('options-container');
+    const imgElement = document.getElementById('story-image');
+    const selectedOptions = new Map();
+
+    optionsVisible = true;
+    optionsContainer.innerHTML = '';
+
+    imgElement.classList.add('story-image--transparent');
+    optionsContainer.classList.add('options-container--dual');
+
+    optionGroups.forEach((group, groupIndex) => {
+        const groupElement = document.createElement('div');
+        groupElement.classList.add('option-group');
+
+        if (group.title) {
+            const title = document.createElement('h2');
+            title.classList.add('option-group-title');
+            title.textContent = group.title;
+            groupElement.appendChild(title);
+        }
+
+        const choicesElement = document.createElement('div');
+        choicesElement.classList.add('option-group-choices');
+
+        group.options.forEach(option => {
+            if (isOptionLocked(sceneId, option)) return;
+
+            const button = createOptionButton(option);
+
+            button.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                selectedOptions.set(groupIndex, option);
+
+                choicesElement.querySelectorAll('.option-button').forEach(optionButton => {
+                    optionButton.classList.remove('option-button--selected');
+                });
+
+                button.classList.add('option-button--selected');
+                updateConfirmButtonState();
+            });
+
+            choicesElement.appendChild(button);
+        });
+
+        groupElement.appendChild(choicesElement);
+        optionsContainer.appendChild(groupElement);
+
+        if (groupIndex < optionGroups.length - 1) {
+            const divider = document.createElement('div');
+            divider.classList.add('option-group-divider');
+            optionsContainer.appendChild(divider);
+        }
+    });
+
+    const confirmButton = document.createElement('button');
+    confirmButton.classList.add('option-confirm-button');
+    confirmButton.type = 'button';
+    confirmButton.textContent = 'Bestätigen';
+    confirmButton.disabled = true;
+
+    confirmButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        if (selectedOptions.size < optionGroups.length) return;
+
+        const selectedOptionList = Array.from(selectedOptions.values());
+        const matchingCombination = findMatchingOptionCombination(optionGroups, selectedOptionList);
+
+        if (!matchingCombination) return;
+
+        handleOptionSelection(matchingCombination);
+    });
+
+    optionsContainer.appendChild(confirmButton);
+
+    function updateConfirmButtonState() {
+        confirmButton.disabled = selectedOptions.size < optionGroups.length;
+    }
+
+    optionsContainer.style.display = 'flex';
+}
+
+function findMatchingOptionCombination(optionGroups, selectedOptions) {
+    const combinations = optionGroups.combinations || gameData.scenes[currentSceneId]?.optionCombinations || [];
+    const selectedIds = selectedOptions.map(option => option.id);
+
+    const matchingCombination = combinations.find(combination => {
+        if (!combination.options || combination.options.length !== selectedIds.length) return false;
+
+        return combination.options.every(optionId => selectedIds.includes(optionId));
+    });
+
+    if (matchingCombination) {
+        return matchingCombination;
+    }
+
+    return selectedOptions.find(option => option.nextScene || option.returnToScene)
 }
 
 function hideOptions() {
@@ -411,6 +527,7 @@ function hideOptions() {
     optionsVisible = false;
     optionsContainer.innerHTML = '';
     optionsContainer.style.display = 'none';
+    optionsContainer.classList.remove('options-container--dual');
 
     imgElement.classList.remove('story-image--transparent');
 }
