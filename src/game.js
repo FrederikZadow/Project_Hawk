@@ -6,6 +6,10 @@ let failOverlayVisible = false;
 let inventory = new Set();
 let lockedOptions = new Set();
 
+const SAVEGAME_KEY = 'project-hawk-savegame-v1';
+const PRELOAD_BATCH_SIZE = 6;
+const preloadedAssets = new Set();
+
 async function loadJsonFile(filePath) {
     const response = await fetch(filePath);
 
@@ -31,8 +35,9 @@ async function loadGameData() {
         };
 
         initializeLockedOptions();
-
-        console.log("Spieldaten geladen:", gameData);
+        updateSavegameButtons();
+        preloadInitialAssets();
+        cacheAllGameAssets();
     } catch (error) {
         console.error("Fehler beim Laden der Spieldaten:", error);
     }
@@ -51,6 +56,106 @@ function initializeLockedOptions() {
             lockedOptions.add(getOptionLockKey(sceneId, option.id));
         });
     })
+}
+
+function getSavegameData() {
+    return {
+        currentSceneId,
+        currentImageIndex,
+        optionsVisible,
+        failOverlayVisible,
+        inventory: Array.from(inventory),
+        lockedOptions: Array.from(lockedOptions),
+        savedAt: new Date().toISOString()
+    };
+}
+
+function hasSavegame() {
+    return localStorage.getItem(SAVEGAME_KEY) !== null;
+}
+
+function saveGameState() {
+    if (!currentSceneId) return;
+
+    try {
+        localStorage.setItem(SAVEGAME_KEY, JSON.stringify(getSavegameData()));
+        updateSavegameButtons();
+    } catch (error) {
+        console.warn("Spielstand konnte nicht gespeichert werden:", error);
+    }
+}
+
+function loadGameState() {
+    const rawSavegame = localStorage.getItem(SAVEGAME_KEY);
+
+    if (!rawSavegame) return;
+
+    try {
+        const savegame = JSON.parse(rawSavegame);
+
+        if (!savegame.currentSceneId || !gameData.scenes?.[savegame.currentSceneId]) {
+            clearSavegame();
+            return false;
+        }
+
+        currentSceneId = savegame.currentSceneId;
+        currentImageIndex = Number.isInteger(savegame.currentImageIndex) ? savegame.currentImageIndex : 0;
+        optionsVisible = false;
+        failOverlayVisible = savegame.failOverlayVisible === true;
+
+        inventory = new Set(savegame.inventory || []);
+        lockedOptions = new Set(savegame.lockedOptions || []);
+
+        const startScreen = document.getElementById('start-screen');
+        const gameContainer = document.getElementById('game-container');
+
+        startScreen.style.display = 'none';
+        gameContainer.style.display = 'flex';
+
+        hideOptions();
+        hideFailOverlay();
+        showCurrentImage();
+
+        if (savegame.failOverlayVisible) {
+            showFailOverlay();
+        }
+
+        if (savegame.optionsVisible) {
+            const scene = gameData.scenes[currentSceneId];
+
+            if (scene.options && scene.options.length > 0) {
+                showOptions(scene.options, currentSceneId);
+            }
+
+            if (scene.optionGroups && scene.optionGroups.length > 0) {
+                showOptionGroups(scene.optionGroups, currentSceneId);
+            }
+        }
+
+        saveGameState();
+        return true;
+    } catch (error) {
+        console.warn('Spielstand konnte nicht geladen werden:', error);
+        clearSavegame();
+        return false;
+    }
+}
+
+function clearSavegame() {
+    localStorage.removeItem(SAVEGAME_KEY);
+    updateSavegameButtons();
+}
+
+function updateSavegameButtons() {
+    const continueButton = document.getElementById('btnContinueGame');
+    const clearSaveButton = document.getElementById('btnClearSave');
+
+    if (!continueButton || !clearSaveButton) return;
+
+    const savegameExists = hasSavegame();
+
+    continueButton.disabled = !savegameExists;
+    clearSaveButton.disabled = !savegameExists;
 }
 
 function hasItem(itemId) {
@@ -145,12 +250,165 @@ function getIconPath(iconName) {
     return `${iconPath}${iconName}.${iconExtension}`;
 }
 
+function getAllGameAssetPaths() {
+    const assets = new Set([
+        './main.html',
+        './main.css',
+        './game.js',
+        './settings.json',
+        './items.json',
+        './story.json',
+        './manifest.webmanifest',
+        '../public/start/icon.png',
+        '../public/start/fail.png',
+        '../public/start/title_screen.png'
+    ]);
+
+    Object.values(gameData.scenes || {}).forEach(scene => {
+        getSceneImages(scene).forEach(imagePath => assets.add(imagePath));
+
+        (scene.options || []).forEach(option => {
+            if (option.icon) {
+                assets.add(getIconPath(option.icon));
+            }
+        });
+
+        (scene.optionGroups || []).forEach(group => {
+            (group.options || []).forEach(option => {
+                if (option.icon) {
+                    assets.add(getIconPath(option.icon));
+                }
+            });
+        });
+    });
+
+    return Array.from(assets);
+}
+
+function getScenePreloadAssetPaths(sceneId) {
+    const scene = gameData.scenes?.[sceneId];
+    if (!scene) return [];
+
+    const assets = new Set(getSceneImages(scene));
+
+    (scene.options || []).forEach(option => {
+        if (option.icon) {
+            assets.add(getIconPath(option.icon));
+        }
+    });
+
+    (scene.optionGroups || []).forEach(group => {
+        (group.options || []).forEach(option => {
+            if (option.icon) {
+                assets.add(getIconPath(option.icon));
+            }
+        });
+    });
+
+    if (scene.nextScene && gameData.scenes[scene.nextScene]) {
+        getSceneImages(gameData.scenes[scene.nextScene]).forEach(imagePath => assets.add(imagePath));
+    }
+
+    if (scene.returnToScene && gameData.scenes[scene.returnToScene]) {
+        getSceneImages(gameData.scenes[scene.returnToScene]).forEach(imagePath => assets.add(imagePath));
+    }
+
+    if (scene.missingItemScene && gameData.scenes[scene.missingItemScene]) {
+        getSceneImages(gameData.scenes[scene.missingItemScene]).forEach(imagePath => assets.add(imagePath));
+    }
+
+    return Array.from(assets);
+}
+
+function preloadImage(src) {
+    if (!src || preloadedAssets.has(src)) {
+        return Promise.resolve();
+    }
+
+    preloadedAssets.add(src);
+
+    return new Promise(resolve => {
+        const image = new Image();
+
+        image.onload = resolve;
+        image.onerror = resolve;
+        image.src = src;
+    });
+}
+
+function preloadAssets(assetPaths, batchSize = PRELOAD_BATCH_SIZE) {
+    const imageAssets = assetPaths.filter(assetPath => {
+        return /\.(png|jpg|jpeg|webp|gif)$/i.test(assetPath);
+    });
+
+    let chain = Promise.resolve();
+
+    for (let index = 0; index < imageAssets.length; index += batchSize) {
+        const batch = imageAssets.slice(index, index + batchSize);
+
+        chain = chain.then(() => {
+            return Promise.all(batch.map(preloadImage));
+        });
+    }
+
+    return chain;
+}
+
+function preloadInitialAssets() {
+    const startAssets = getScenePreloadAssetPaths(gameData.startScene || 'start');
+
+    preloadAssets(startAssets, PRELOAD_BATCH_SIZE);
+}
+
+function preloadCurrentAndNextSceneAssets() {
+    if (!currentSceneId) return;
+
+    const scene = gameData.scenes[currentSceneId];
+    const assets = new Set(getScenePreloadAssetPaths(currentSceneId));
+
+    (scene.options || []).forEach(option => {
+        if (option.nextScene) {
+            getScenePreloadAssetPaths(option.nextScene).forEach(asset => assets.add(asset));
+        }
+
+        if (option.returnToScene) {
+            getScenePreloadAssetPaths(option.returnToScene).forEach(asset => assets.add(asset));
+        }
+    });
+
+    (scene.optionCombinations || []).forEach(combination => {
+        if (combination.nextScene) {
+            getScenePreloadAssetPaths(combination.nextScene).forEach(asset => assets.add(asset));
+        }
+
+        if (combination.returnToScene) {
+            getScenePreloadAssetPaths(combination.returnToScene).forEach(asset => assets.add(asset));
+        }
+    });
+
+    preloadAssets(Array.from(assets), PRELOAD_BATCH_SIZE);
+}
+
+function cacheAllGameAssets() {
+    const assets = getAllGameAssetPaths();
+
+    if('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(registration => {
+            if (registration.active) {
+                registration.active.postMessage({ type: 'CACHE_ALL_ASSETS', assets });
+            }
+        });
+    }
+
+    preloadAssets(assets, PRELOAD_BATCH_SIZE);
+}
+
 function isFailScene(sceneId) {
-    return sceneId.includes('_fail_') || sceneId.includes('fail_');
+    return sceneId.includes('fail_');
 }
 
 function isEndScene(sceneId) {
-    return sceneId.includes('_end_') || sceneId.includes('end_');
+    return sceneId.includes('end_');
 }
 
 function resetGameState() {
@@ -170,6 +428,7 @@ function showStartScreen() {
     const storyText = document.getElementById('story-text');
 
     resetGameState();
+    clearSavegame();
 
     hideOptions();
     hideFailOverlay();
@@ -232,13 +491,6 @@ function showScene(sceneId, settings = {}) {
 
     const images = getSceneImages(scene);
 
-    console.log("Show scene:", {
-        sceneId,
-        scene,
-        images,
-        settings
-    });
-
     currentSceneId = sceneId;
     currentImageIndex = settings.startAtLastImage && images.length > 0 ? images.length - 1 : 0;
     optionsVisible = false;
@@ -246,6 +498,8 @@ function showScene(sceneId, settings = {}) {
     hideOptions();
     hideFailOverlay();
     showCurrentImage();
+    saveGameState();
+    preloadCurrentAndNextSceneAssets();
 
     if (settings.showOptionsImmediately && scene.options && scene.options.length > 0) {
         showOptions(scene.options, sceneId);
@@ -277,6 +531,7 @@ function showCurrentImage() {
     }
 
     storyText.innerHTML = scene.text || '';
+    saveGameState();
 }
 
 function nextImageOrOptions() {
@@ -306,6 +561,7 @@ function nextImageOrOptions() {
 
     if(isFailScene(currentSceneId) && scene.returnToScene) {
         showFailOverlay();
+        saveGameState();
         return;
     }
 
@@ -339,6 +595,7 @@ function nextImageOrOptions() {
 
     if (scene.optionGroups && scene.optionGroups.length > 0) {
         showOptionGroups(scene.optionGroups, currentSceneId);
+        return;
     }
 
     if (scene.returnToScene) {
@@ -356,6 +613,7 @@ function nextImageOrOptions() {
 
 function handleOptionSelection(option) {
     applyOptionEffects(option);
+    saveGameState();
 
     if(option.returnToScene) {
         showScene(option.returnToScene, {
@@ -417,6 +675,8 @@ function showOptions(options, sceneId = currentSceneId) {
 
     optionsContainer.classList.remove('options-container--dual');
     optionsContainer.style.display = 'flex';
+    saveGameState();
+    preloadCurrentAndNextSceneAssets();
 }
 
 function showOptionGroups(optionGroups, sceneId = currentSceneId) {
@@ -501,6 +761,8 @@ function showOptionGroups(optionGroups, sceneId = currentSceneId) {
     }
 
     optionsContainer.style.display = 'flex';
+    saveGameState();
+    preloadCurrentAndNextSceneAssets();
 }
 
 function findMatchingOptionCombination(optionGroups, selectedOptions) {
@@ -532,20 +794,46 @@ function hideOptions() {
     imgElement.classList.remove('story-image--transparent');
 }
 
+function registerServiceWorker() {
+    if (!('serviceWorker' in navigator)) return;
+
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+            .then(registration => {
+                console.log('Service Worker registriert:', registration.scope);
+            })
+            .catch(error => {
+                console.warn('Service Worker konnte nicht registriert werden:', error);
+            });
+    });
+}
+
 const startBtn = document.getElementById('btnStartGame');
+const continueBtn = document.getElementById('btnContinueGame');
+const clearSaveBtn = document.getElementById('btnClearSave');
 const startScreen = document.getElementById('start-screen');
 const gameContainer = document.getElementById('game-container');
 
 startBtn.addEventListener('click', () => {
     resetGameState();
+    clearSavegame();
 
     startScreen.style.display = 'none';
     gameContainer.style.display = 'flex';
     showScene(gameData.startScene || "start");
 });
 
+continueBtn.addEventListener('click', () => {
+    loadGameState();
+});
+
+clearSaveBtn.addEventListener('click', () => {
+    clearSavegame();
+})
+
 gameContainer.addEventListener('click', () => {
     nextImageOrOptions();
 });
 
+registerServiceWorker();
 loadGameData();

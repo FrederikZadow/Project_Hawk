@@ -2,9 +2,13 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="main.css">
+    <link rel="manifest" href="manifest.webmanifest">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <link rel="icon" type="image/png" href="../public/start/icon.png"/>
+    <link rel="apple-touch-icon" href="../public/start/icon.png"/>
     <noscript>
         <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     </noscript>
@@ -12,7 +16,11 @@
 </head>
 <body>
     <div id="start-screen">
-        <button id="btnStartGame" class="btn">Start game</button>
+        <div class="start-menu">
+            <button id="btnStartGame" class="btn">Start game</button>
+            <button id="btnContinueGame" class="btn btn-secondary">Fortsetzen</button>
+            <button id="btnClearSave" class="btn btn-secondary btn-danger">Spielstand löschen</button>
+        </div>
     </div>
 
     <div id="game-container">
