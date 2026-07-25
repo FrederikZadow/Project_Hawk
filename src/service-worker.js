@@ -1,7 +1,7 @@
 const CACHE_NAME = 'project-hawk-cache-v3';
 
 const CORE_ASSETS = [
-    './main.html',
+    './index.html',
     './main.css',
     './game.js',
     './settings.json',
@@ -128,7 +128,7 @@ self.addEventListener('fetch', event => {
             .catch(() => {
                 return caches.match(event.request)
                     .then(cachedResponse => {
-                        return cachedResponse || caches.match('./main.html');
+                        return cachedResponse || caches.match('./index.html');
                     });
             })
     );

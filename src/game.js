@@ -252,7 +252,7 @@ function getIconPath(iconName) {
 
 function getAllGameAssetPaths() {
     const assets = new Set([
-        './main.html',
+        './index.html',
         './main.css',
         './game.js',
         './settings.json',
