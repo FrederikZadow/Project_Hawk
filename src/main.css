@@ -92,6 +92,7 @@ html, body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #story-image {
@@ -121,20 +122,6 @@ html, body {
 
 .story-image--transparent {
     opacity: 0.35;
-}
-
-#story-text {
-    position: fixed;
-    left: 50%;
-    bottom: 8rem;
-    width: min(80vw, 55rem);
-    transform: translateX(-50%);
-    z-index: 2;
-    color: white;
-    font-size: 1.5rem;
-    line-height: 1.4;
-    text-align: center;
-    text-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.9);
 }
 
 #options-container {
@@ -253,23 +240,11 @@ html, body {
     pointer-events: none;
 }
 
-.option-label {
-    font-size: 1rem;
-    text-align: center;
-    pointer-events: none;
-}
-
 #options-container button {
     cursor: pointer;
 }
 
 @media (max-width: 1200px) {
-    #story-text {
-        bottom: 6rem;
-        width: 85vw;
-        font-size: 1.35rem;
-    }
-
     #options-container {
         gap: 1.5rem;
     }
@@ -316,12 +291,6 @@ html, body {
         max-height: 100dvh;
     }
 
-    #story-text {
-        bottom: 4rem;
-        width: 90vw;
-        font-size: 1.15rem;
-    }
-
     #options-container.options-container--dual {
         width: 94vw;
         max-height: 88dvh;
@@ -353,10 +322,6 @@ html, body {
         height: 3.8rem;
     }
 
-    .option-label {
-        font-size: 0.85rem;
-    }
-
     .option-confirm-button {
         border-radius: 1.2rem;
         font-size: 1rem;
@@ -386,12 +351,6 @@ html, body {
         font-size: 0.9rem;
     }
 
-    #story-text {
-        bottom: 2rem;
-        width: 92vw;
-        font-size: 1rem;
-    }
-
     #options-container {
         top: 52%;
         gap: 0.75rem;
@@ -412,10 +371,6 @@ html, body {
         height: 3rem;
     }
 
-    .option-label {
-        font-size: 0.75rem;
-    }
-
     .option-confirm-button {
         width: min(80vw, 18rem);
         font-size: 0.95rem;
@@ -432,11 +387,6 @@ html, body {
     .btn {
         font-size: 1.2rem;
         padding: 0.6rem 1.4rem;
-    }
-
-    #story-text {
-        bottom: 1rem;
-        font-size: 0.95rem;
     }
 
     #options-container,

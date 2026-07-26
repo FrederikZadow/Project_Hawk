@@ -172,7 +172,6 @@ function obtainItem(itemId) {
     if (inventory.has(itemId)) return;
 
     inventory.add(itemId);
-    console.log(`Item erhalten:" ${itemId}`, Array.from(inventory));
 }
 
 function removeItem(itemId) {
@@ -185,7 +184,6 @@ function removeItem(itemId) {
     if (!inventory.has(itemId)) return;
 
     inventory.delete(itemId);
-    console.log(`Item entfernt: ${itemId}`, Array.from(inventory));
 }
 
 function getOptionLockKey(sceneId, optionId) {
@@ -425,7 +423,6 @@ function showStartScreen() {
     const startScreen = document.getElementById('start-screen');
     const gameContainer = document.getElementById('game-container');
     const imgElement = document.getElementById('story-image');
-    const storyText = document.getElementById('story-text');
 
     resetGameState();
     clearSavegame();
@@ -435,7 +432,6 @@ function showStartScreen() {
 
     imgElement.removeAttribute('src');
     imgElement.style.display = 'none';
-    storyText.innerHTML = '';
 
     gameContainer.style.display = 'none';
     startScreen.style.display = 'flex';
@@ -515,7 +511,6 @@ function showCurrentImage() {
     if (!scene) return;
 
     const imgElement = document.getElementById('story-image');
-    const storyText = document.getElementById('story-text');
     const images = getSceneImages(scene);
     const currentImage = images[currentImageIndex];
 
@@ -530,7 +525,6 @@ function showCurrentImage() {
         imgElement.style.display = 'none';
     }
 
-    storyText.innerHTML = scene.text || '';
     saveGameState();
 }
 
@@ -632,7 +626,6 @@ function createOptionButton(option) {
     const button = document.createElement('button');
     button.classList.add('option-button');
     button.type = 'button';
-    button.title = option.text || '';
 
     const icon = document.createElement('img');
     icon.classList.add('option-icon');
@@ -640,13 +633,6 @@ function createOptionButton(option) {
     icon.alt = option.alt || option.text || 'Option';
 
     button.appendChild(icon);
-
-    if (option.text) {
-       const label = document.createElement('span');
-       label.classList.add('option-label');
-       label.textContent = option.text;
-       button.appendChild(label);
-    }
 
     return button;
 }
@@ -799,9 +785,6 @@ function registerServiceWorker() {
 
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./service-worker.js')
-            .then(registration => {
-                console.log('Service Worker registriert:', registration.scope);
-            })
             .catch(error => {
                 console.warn('Service Worker konnte nicht registriert werden:', error);
             });
@@ -834,6 +817,17 @@ clearSaveBtn.addEventListener('click', () => {
 gameContainer.addEventListener('click', () => {
     nextImageOrOptions();
 });
+
+window.addEventListener('keydown', (event) => {
+    if (event.code === 'Space') {
+        if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+
+        if (gameContainer.style.display === 'flex') {
+            event.preventDefault();
+            nextImageOrOptions();
+        }
+    }
+})
 
 registerServiceWorker();
 loadGameData();

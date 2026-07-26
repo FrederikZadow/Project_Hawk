@@ -1,6 +1,6 @@
 {
     "name": "Project Hawk",
-    "description": "Interaktives Story-Adventures (based of Henry Stickmin)",
+    "description": "Interaktives Story-Abenteuer (inspiriert von Henry Stickmin)",
     "start_url": "./main.html",
     "scope": "./",
     "display": "standalone",
