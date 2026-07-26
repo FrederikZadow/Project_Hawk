@@ -1,31 +1,31 @@
-# Projekt Planung
+# Projektplanung - Übersicht
 
 ## ToDo's:
-- [ ] Startseite
-- [ ] Story | Text | Bilder - Marko
-- [ ] Titel - Alle
-- [ ] README
-- [ ] Frontend - Freddy & Lennox
-- [ ] Backend - Chris & Lennox
-- [ ] Json
+- [x] Startseite
+- [x] Story | ~~Text~~ | Bilder - Marko
+- [x] Titel - Alle
+- [x] README.md
+- [x] Frontend - Freddy & Lennox
+- [x] Backend - Chris & Lennox
+- [x] JSON
 
 ---
 ## Wichtige Dinge:
-- [ ] Ordnerstruktur wie in Prüfungslaistung gefordert (https://git.librete.ch/DHBW/pruefungsleistung) 
-- [ ] Naming Regeln => CamelCase
-- [ ] Basic html 5 
+- [x] Ordnerstruktur wie in Prüfungsleistung gefordert (https://git.librete.ch/DHBW/pruefungsleistung) 
+- [x] Code Conventions (z.B. CamelCase, ...)
+- [x] Basic HTML5 
 - ### Webseite barrierearm gestallten
-- [ ] Textalternativen => alt bei img nutzen
+- [x] Textalternativen setzen
 - [ ] aria nutzen, wenn nötig
-- [ ] Kontrast: mindestens 4,5:1 für normalen Text
-- [ ] Inhalte bei 200 % Zoom noch nutzbar
-- [ ] Kein Flackern (maximal 3×/Sekunde)
-- [ ] Fokus-Ring bei Tastatur-Navigation 
+- [x] Kontrast: mindestens 4,5:1 für normalen Text
+- [x] Inhalte bei 200 % Zoom noch nutzbar
+- [x] Kein Flackern (maximal 3×/Sekunde)
+- [x] Fokus-Ring bei Tastatur-Navigation 
 
 ---
 ## Feature Ideen:
 - [ ] Light / Dark Mode
 - [ ] Sprache umstellen (Englisch)
 - [ ] Audio
-- [ ] Schon ausprobierte Optionen werden ausgegraut
-- [ ] Failtext
+- [ ] Bereits gegangene Wege werden hervorgehoben
+- [x] Failtext
